@@ -9,7 +9,7 @@ JOB2_PORT = 5001
 def run_job1():
     print("Starting job1:")
     resp = requests.post(
-        "url=f'http://localhost:{JOB1_PORT}",
+        url=f'http://127.0.0.1:{JOB1_PORT}',
         json={
             "date": "2022-08-09",
             "raw_dir": "C:\\tasks\\data_storage\\raw\\sales\\22-08-09"
@@ -23,7 +23,7 @@ def run_job1():
 def run_job2():
     print("Starting job2:")
     resp = requests.post(
-        url=f"http://localhost:{JOB2_PORT}/",
+        url=f"http://127.0.0.1:{JOB2_PORT}/",
         json={
             "raw_dir": "C:\\tasks\\data_storage\\raw\\sales\\22-08-09",
             "stg_dir": "C:\\tasks\\data_storage\\stg\\sales\\22-08-09",
