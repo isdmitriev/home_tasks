@@ -12,7 +12,8 @@ def run_job1():
         "url=f'http://localhost:{JOB1_PORT}",
         json={
             "date": "2022-08-09",
-            "dir_name": "C:\\tasks\\data_storage\\raw\\sales\\22-08-09",
+            "raw_dir": "C:\\tasks\\data_storage\\raw\\sales\\22-08-09"
+
         },
     )
     assert resp.status_code == 200
@@ -28,11 +29,11 @@ def run_job2():
             "stg_dir": "C:\\tasks\\data_storage\\stg\\sales\\22-08-09",
         },
     )
-    assert resp.status_code == 201
+    assert resp.status_code == 200
     print("job2 completed!")
 
 
 if __name__ == "__main__":
     run_job1()
-    time.sleep(3)
+    time.sleep(8)
     run_job2()
