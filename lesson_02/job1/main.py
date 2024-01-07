@@ -7,16 +7,20 @@ app = Flask(__name__)
 
 
 @app.route("/", methods=["GET", "POST"])
-async def fetch_sales_data():
-    if request.method == "POST":
-        request_data = request.get_json()
-        raw_dir: str = request_data["raw_dir"]
-        date: str = request_data["date"]
-        SalesJob().get_sales_job(raw_dir, date)
 
-        return Response(status=200)
+
+def fetch_sales_data():
+    if request.method == "POST":
+        try:
+            request_data = request.get_json()
+            raw_dir: str = request_data["raw_dir"]
+            date: str = request_data["date"]
+            SalesJob().get_sales_job(raw_dir, date)
+            return "Success", 200
+        except:
+            return "Server error", 500
     else:
-        return Response(status=200)
+        return 404
 
 
 if __name__ == "__main__":

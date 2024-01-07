@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing_extensions import Literal, Self
 
 
 class SaleData(BaseModel):

@@ -7,7 +7,9 @@ app = Flask(__name__)
 
 
 @app.route("/", methods=["GET", "POST"])
-async def restore_sales_data():
+
+
+def restore_sales_data():
     if request.method == "POST":
         request_data = request.get_json()
         raw_dir: str = request_data["raw_dir"]
