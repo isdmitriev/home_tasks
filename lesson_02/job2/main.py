@@ -7,8 +7,6 @@ app = Flask(__name__)
 
 
 @app.route("/", methods=["GET", "POST"])
-
-
 def restore_sales_data():
     if request.method == "POST":
         request_data = request.get_json()
