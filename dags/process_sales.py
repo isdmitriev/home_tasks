@@ -30,11 +30,10 @@ def convert_to_avro():
 
 
 with DAG(dag_id="process_sales",
-         start_date=datetime(2024, 1, 7),
-         end_date=datetime(2024, 1, 12),
+         start_date=datetime(2024, 1, 9),
 
-         schedule_interval=timedelta(minutes=2),
-         catchup=False) as dag:
+         schedule_interval="0 1 * * *",
+         catchup=True) as dag:
     task1 = PythonOperator(task_id="extract_data_from_api", python_callable=extract_data_from_api)
     task2 = PythonOperator(task_id="convert_to_avro", python_callable=convert_to_avro)
 task1 >> task2
