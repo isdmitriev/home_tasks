@@ -6,9 +6,9 @@ import requests
 from requests import Response
 
 
-def extract_data_from_api(concrete_date: str | None) -> None:
+def extract_data_from_api(concrete_date, **context):
     uri: str = "http://host.docker.internal:5000/"
-    if (concrete_date is None):
+    if (concrete_date == "All"):
         interesting_dates: List[str] = ["2022-08-09", "2022-08-10", "2022-08-11"]
         for date in interesting_dates:
             raw_dir: str = f"C:\\tasks\\data_storage\\raw\\sales\\{date}"
@@ -25,10 +25,10 @@ def extract_data_from_api(concrete_date: str | None) -> None:
             raise AirflowException("external server error")
 
 
-def convert_to_avro(concrete_date: str | None) -> None:
+def convert_to_avro(concrete_date, **context):
     interesting_dates: List[str] = ["2022-08-09", "2022-08-10", "2022-08-11"]
     uri: str = "http://host.docker.internal:5001/"
-    if (concrete_date is None):
+    if (concrete_date == "All"):
         for date in interesting_dates:
             stg_dir: str = f"C:\\tasks\\data_storage\\stg\\sales\\{date}"
             raw_dir: str = f"C:\\tasks\\data_storage\\raw\\sales\\{date}"
@@ -51,8 +51,12 @@ with DAG(dag_id="process_sales",
          start_date=datetime(2024, 1, 9),
 
          schedule_interval="0 1 * * *",
+
          catchup=True) as dag:
     task1 = PythonOperator(task_id="extract_data_from_api", python_callable=extract_data_from_api,
-                           op_args={'concrete_date': None})
-    task2 = PythonOperator(task_id="convert_to_avro", python_callable=convert_to_avro, p_args={'concrete_date': None})
+                           op_kwargs={'concrete_date': "All"}
+                           )
+    task2 = PythonOperator(task_id="convert_to_avro", python_callable=convert_to_avro,
+                           op_kwargs={'concrete_date': "All"}
+                           )
 task1 >> task2
