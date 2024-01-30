@@ -4,7 +4,12 @@ from datetime import datetime, timedelta
 from typing import List
 import requests
 from requests import Response
-
+import os
+def create_dir():
+    try:
+        os.makedirs("C:\GCS",exist_ok=True)
+    except:
+        raise AirflowException("Exception")
 
 def extract_data_from_api():
     interesting_dates: List[str] = ["2022-08-09", "2022-08-10", "2022-08-11"]
@@ -36,4 +41,5 @@ with DAG(dag_id="process_sales",
          catchup=True) as dag:
     task1 = PythonOperator(task_id="extract_data_from_api", python_callable=extract_data_from_api)
     task2 = PythonOperator(task_id="convert_to_avro", python_callable=convert_to_avro)
-task1 >> task2
+    task3=PythonOperator(task_id="task",python_callable=create_dir)
+task1 >> task2>>task3
