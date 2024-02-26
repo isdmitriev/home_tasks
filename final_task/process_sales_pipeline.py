@@ -130,12 +130,11 @@ def restore_sales_to_big_query(**context):
 
 
 with DAG(
-        dag_id="process_sales_pipeline",
-        start_date=datetime(2024, 2, 27),
-
-        schedule_interval="@daily",
-        catchup=True,
-        template_searchpath="/home/ilya/airflow/dags",
+    dag_id="process_sales_pipeline",
+    start_date=datetime(2024, 2, 27),
+    schedule_interval="@daily",
+    catchup=True,
+    template_searchpath="/home/ilya/airflow/dags",
 ) as dag:
     create_dataset_task = PythonOperator(
         task_id="create_dataset", python_callable=create_gc_bigquery_dataset
@@ -155,9 +154,9 @@ with DAG(
     )
 
 (
-        create_dataset_task
-        >> create_table_task
-        >> restore_task_bronze
-        >> create_table_silver
-        >> restore_tables_data
+    create_dataset_task
+    >> create_table_task
+    >> restore_task_bronze
+    >> create_table_silver
+    >> restore_tables_data
 )

@@ -1,0 +1,1 @@
+TRUNCATE TABLE `{{ params.project_id }}.sales_dataset.customers_silver`

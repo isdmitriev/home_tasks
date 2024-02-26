@@ -1,3 +1,5 @@
+
+
 insert `sales_dataset.user_profiles_enriched`(
   client_id,
   registration_date,
