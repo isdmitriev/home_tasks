@@ -130,7 +130,7 @@ def restore_sales_to_big_query(**context):
 
 
 with DAG(
-    dag_id="process_sales_pipeline",
+    dag_id="process_sales_pipeline_dag",
     start_date=datetime(2024, 2, 27),
     schedule_interval="@daily",
     catchup=True,

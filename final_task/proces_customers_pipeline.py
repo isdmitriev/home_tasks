@@ -147,11 +147,10 @@ from `sales_dataset.customers_bronze`;"""
 
 
 with DAG(
-    dag_id="proces_customers_pipeline3",
-    start_date=datetime(2024, 2, 26),
+    dag_id="proces_customers_pipeline_dag",
+    start_date=datetime(2024, 2, 27),
     schedule_interval="@daily",
     catchup=True,
-    template_searchpath="/home/ilya/airflow/dags",
 ) as dag:
     customers_bronze_table_create_task = PythonOperator(
         task_id="create_bronze_table", python_callable=create_customers_table_bronze
