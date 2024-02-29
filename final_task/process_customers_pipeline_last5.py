@@ -99,59 +99,31 @@ def restore_customers_to_big_query_task(**context):
         raise AirflowException("error data restoring")
 
 
-def clear_customers_silver_table(**context):
-    try:
-        truncate_table_operator: BigQueryInsertJobOperator = BigQueryInsertJobOperator(
-            task_id="truncate_table",
-            configuration={
-                "query": {
-                    "query": "{% include 'sql/truncate_customers_silver.sql' %}",
-                    "useLegacySql": False,
-                },
-            },
-            params={"project_id": PROGECT_ID},
-        )
-        truncate_table_operator.execute(context=context)
-
-    except:
-        raise AirflowException("error in table truncate")
-
-
-def restore_customers_from_bronze_to_silver(**context):
-    try:
-        sql_restore_query: str = """ truncate table sales_dataset.customers_silver; insert `sales_dataset.customers_silver`(
-  client_id,
-  registration_date,
-  first_name,
-  last_name,
-  email,
-  state
-)
-select distinct CAST(Id as INTEGER)AS  client_id,CAST(RegistrationDate AS DATE) AS registration_date,
-CAST(FirstName AS STRING) AS first_name,CAST(LastName AS STRING) AS last_name,CAST(Email AS STRING)  as email,
-CAST(State AS STRING) as state
-
-from `sales_dataset.customers_bronze`;"""
-        restore_data_job: BigQueryInsertJobOperator = BigQueryInsertJobOperator(
-            task_id="restore_data_task",
-            configuration={
-                "query": {
-                    "query": sql_restore_query,
-                    "useLegacySql": False,
-                }
-            },
-        )
-        restore_data_job.execute(context=context)
-    except:
-        raise AirflowException("error")
-
-
 with DAG(
-    dag_id="proces_customers_pipeline_dag",
+    dag_id="proces_customers_pipeline_solution",
     start_date=datetime(2024, 2, 27),
     schedule_interval="@daily",
     catchup=True,
+    template_searchpath="/home/ilya/airflow/dags/sql",
 ) as dag:
+    truncate_silver_task = BigQueryInsertJobOperator(
+        task_id="truncate_table",
+        configuration={
+            "query": {
+                "query": "{% include 'truncate_customers_silver.sql' %}",
+                "useLegacySql": False,
+            },
+        },
+    )
+    restore_customers_from_bronze_to_silver_task = BigQueryInsertJobOperator(
+        task_id="restore_customers_to_silver",
+        configuration={
+            "query": {
+                "query": "{% include 'restore_customers.sql' %}",
+                "useLegacySql": False,
+            },
+        },
+    )
     customers_bronze_table_create_task = PythonOperator(
         task_id="create_bronze_table", python_callable=create_customers_table_bronze
     )
@@ -161,16 +133,12 @@ with DAG(
     customers_restore_bronze_table_task = PythonOperator(
         task_id="restore_customers", python_callable=restore_customers_to_big_query_task
     )
-    customers_silver_clear_task = PythonOperator(
-        task_id="clear_customers_silver", python_callable=clear_customers_silver_table
-    )
-    restore_customers_from_bronze_to_silver_task = PythonOperator(
-        task_id="restore_data_task",
-        python_callable=restore_customers_from_bronze_to_silver,
-    )
+
+
 (
     customers_bronze_table_create_task
     >> customers_silver_table_create_task
+    >> truncate_silver_task
     >> customers_restore_bronze_table_task
     >> restore_customers_from_bronze_to_silver_task
 )

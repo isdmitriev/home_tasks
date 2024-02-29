@@ -83,8 +83,6 @@ on customers.email=us_prof.email;"""
 
 with DAG(
     dag_id="enrich_user_profiles_dag",
-    start_date=datetime(2024, 2, 27),
-    schedule_interval="@daily",
     catchup=True,
 ) as dag:
     create_table_user_profiles_enriched_task = PythonOperator(
