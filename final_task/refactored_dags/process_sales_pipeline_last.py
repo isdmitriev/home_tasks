@@ -107,8 +107,8 @@ def restore_sales_to_big_query(**context):
 
 
 with DAG(
-    dag_id="process_sales_pipeline_solution3",
-    start_date=datetime(2024, 2, 28),
+    dag_id="process_sales_pipeline_task_solution",
+    start_date=datetime(2024, 2, 29),
     schedule_interval="@daily",
     catchup=True,
     template_searchpath="/home/ilya/airflow/dags/sql",

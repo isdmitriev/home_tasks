@@ -36,7 +36,7 @@ def create_table_user_profiles_enriched(**context):
 
 
 with DAG(
-        dag_id="enrich_user_profiles_dag_solution",
+        dag_id="enrich_user_profiles_task_solution",
         catchup=True,
         template_searchpath="/home/ilya/airflow/dags/sql",
 ) as dag:

@@ -1,4 +1,4 @@
-TRUNCATE TABLE sales_dataset.silver;
+TRUNCATE TABLE sales_dataset.customers_silver;
 insert `sales_dataset.customers_silver`(
   client_id,
   registration_date,

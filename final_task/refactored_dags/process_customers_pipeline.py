@@ -100,8 +100,8 @@ def restore_customers_to_big_query_task(**context):
 
 
 with DAG(
-    dag_id="proces_customers_pipeline_solution",
-    start_date=datetime(2024, 2, 27),
+    dag_id="proces_customers_pipeline_task_solution",
+    start_date=datetime(2024, 2, 29),
     schedule_interval="@daily",
     catchup=True,
     template_searchpath="/home/ilya/airflow/dags/sql",

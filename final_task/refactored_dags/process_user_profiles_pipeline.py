@@ -59,7 +59,7 @@ def restore_user_profiles_json_to_dataset(**context):
 
 
 with DAG(
-        dag_id="user_profiles_pipeline_solution",
+        dag_id="user_profiles_pipeline_task_solution",
         catchup=True,
         template_searchpath="/home/ilya/airflow/dags/sql",
 ) as dag:
